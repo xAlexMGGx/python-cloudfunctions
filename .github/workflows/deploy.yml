@@ -1,0 +1,33 @@
+name: Deploy to Google Cloud Functions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Deploy Cloud Function (Storage Trigger)
+        run: |
+          gcloud functions deploy process_file --runtime python310 --trigger-resource ${{ secrets.GCP_BUCKET_NAME }} --trigger-event google.storage.object.finalize --entry-point process_file --region us-central1 --allow-unauthenticated
+
+      - name: Deploy Cloud Function (HTTP Trigger)
+        run: |
+          gcloud functions deploy http_hello_world --runtime python310 --trigger-http --entry-point http_hello_world --region us-central1 --allow-unauthenticated
+
