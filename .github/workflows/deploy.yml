@@ -23,10 +23,6 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Deploy Cloud Function (Storage Trigger)
-        run: |
-          gcloud functions deploy process_file --runtime python310 --trigger-resource ${{ secrets.GCP_BUCKET_NAME }} --trigger-event google.storage.object.finalize --entry-point process_file --region us-central1 --allow-unauthenticated
-
       - name: Deploy Cloud Function (HTTP Trigger)
         run: |
           gcloud functions deploy http_hello_world --runtime python310 --trigger-http --entry-point http_hello_world --region us-central1 --allow-unauthenticated
