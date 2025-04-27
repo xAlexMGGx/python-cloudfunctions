@@ -1,4 +1,5 @@
 from google.cloud import storage
+from flask import Request
 
 def process_file(event, context):
     """Triggered when a file is uploaded to Cloud Storage."""
@@ -17,7 +18,7 @@ def process_file(event, context):
         print(f"File content: {content}")
     
     return f"Processed {file_name} successfully!"
-from flask import Request
+
 
 def http_hello_world(request: Request):
     """HTTP Function that responds with a greeting."""
